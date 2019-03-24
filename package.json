@@ -1,6 +1,9 @@
 {
   "name": "tdd-react",
   "version": "0.1.0",
+  "description": "Yet another React app developed using TDD approach.",
+  "author": "William R. J. Ribeiro - @bill_bsb",
+  "license": "MIT",
   "private": true,
   "dependencies": {
     "react": "^16.8.4",
@@ -8,10 +11,13 @@
     "react-scripts": "2.1.8"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "yarn validate && react-scripts start",
+    "build": "yarn validate && react-scripts build",
+    "test": "yarn validate && react-scripts test",
+    "validate": "yarn lint && yarn flow",
+    "lint": "eslint src/**/*.js",
+    "flow": "flow",
+    "flow-typed": "flow-typed"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -21,5 +27,9 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "flow-bin": "^0.95.1",
+    "flow-typed": "^2.5.1"
+  }
 }
