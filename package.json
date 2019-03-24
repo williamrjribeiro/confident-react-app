@@ -29,7 +29,10 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.11.2",
     "flow-bin": "^0.95.1",
-    "flow-typed": "^2.5.1"
+    "flow-typed": "^2.5.1",
+    "jest-enzyme": "^7.0.2"
   }
 }
