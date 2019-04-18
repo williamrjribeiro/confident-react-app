@@ -13,10 +13,11 @@
   "scripts": {
     "start": "yarn validate && react-scripts start",
     "build": "yarn validate && react-scripts build",
-    "test": "yarn validate && react-scripts test",
+    "test": "yarn validate && react-scripts test --verbose",
     "validate": "yarn lint && yarn flow",
     "lint": "eslint src/**/*.js",
     "flow": "flow",
+    "flow:watch": "flow-watch",
     "flow-typed": "flow-typed"
   },
   "eslintConfig": {
@@ -33,6 +34,7 @@
     "enzyme-adapter-react-16": "^1.11.2",
     "flow-bin": "^0.95.1",
     "flow-typed": "^2.5.1",
+    "flow-watch": "^1.1.4",
     "jest-enzyme": "^7.0.2"
   }
 }

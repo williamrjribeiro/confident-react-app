@@ -1,7 +1,9 @@
 [ignore]
-./node_modules
+/node_modules
+
 [include]
-./src
+/src/**/*.js
+
 [libs]
 
 [lints]
