@@ -1,8 +1,18 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 
-function ListGroup () {
-  return null
+type ListGroupItemProps = {
+  children: string,
+};
+
+export function ListGroupItem (props: ListGroupItemProps) {
+  return <li className="list-group-item">{props.children}</li>;
 }
 
-export default ListGroup;
+type ListGroupProps = {
+  children: React.ChildrenArray<React.Element<typeof ListGroupItem>>
+};
+
+export function ListGroup (props: ListGroupProps) {
+  return <ul className='list-group'>{props.children}</ul>
+}
