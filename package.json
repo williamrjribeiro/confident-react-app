@@ -18,7 +18,9 @@
     "lint": "eslint src/**/*.js",
     "flow": "flow",
     "flow:watch": "flow-watch",
-    "flow-typed": "flow-typed"
+    "flow-typed": "flow-typed",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -35,6 +37,12 @@
     "flow-bin": "^0.95.1",
     "flow-typed": "^2.5.1",
     "flow-watch": "^1.1.4",
-    "jest-enzyme": "^7.0.2"
+    "jest-enzyme": "^7.0.2",
+    "@storybook/react": "^5.0.11",
+    "@storybook/addon-actions": "^5.0.11",
+    "@storybook/addon-links": "^5.0.11",
+    "@storybook/addons": "^5.0.11",
+    "@babel/core": "^7.4.4",
+    "babel-loader": "^8.0.5"
   }
 }
