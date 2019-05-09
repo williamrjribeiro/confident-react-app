@@ -3,10 +3,23 @@ import * as React from 'react';
 
 type ListGroupItemProps = {
   children: string,
+  active?: boolean,
+  onClick?: Function
 };
 
 export function ListGroupItem (props: ListGroupItemProps) {
-  return <li className="list-group-item">{props.children}</li>;
+  let classes = "list-group-item" + (props.active ? " active" : "")
+
+  if(props.onClick) {
+    classes += " list-group-item-action";
+    return (
+      <button type="button" className={classes} onClick={props.onClick}>
+        {props.children}
+      </button>
+    );
+  } else {
+    return <li className={classes}>{props.children}</li>;
+  }
 }
 
 type ListGroupProps = {
