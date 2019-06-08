@@ -4,21 +4,21 @@ import * as React from 'react';
 type ListGroupItemProps = {
   children: string,
   active?: boolean,
-  onClick?: Function
+  onClick?: (SyntheticEvent<HTMLButtonElement>) => void
 };
 
-export function ListGroupItem (props: ListGroupItemProps) {
-  let classes = "list-group-item" + (props.active ? " active" : "")
+export function ListGroupItem ({ children, active, onClick }: ListGroupItemProps) {
+  let classes = "list-group-item" + (active ? " active" : "")
 
-  if(props.onClick) {
+  if(onClick) {
     classes += " list-group-item-action";
     return (
-      <button type="button" className={classes} onClick={props.onClick}>
-        {props.children}
+      <button type="button" className={classes} onClick={onClick}>
+        {children}
       </button>
     );
   } else {
-    return <li className={classes}>{props.children}</li>;
+    return <li className={classes}>{children}</li>;
   }
 }
 

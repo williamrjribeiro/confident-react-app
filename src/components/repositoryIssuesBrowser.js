@@ -2,12 +2,12 @@
 import * as React from "react";
 import { ListGroup, ListGroupItem } from "./listGroup";
 
-type Issue = {
+export type Issue = {
   title: string,
   isOpen: boolean,
 };
 
-type Repository = {
+export type Repository = {
   name: string,
   issues?: Issue[],
 };

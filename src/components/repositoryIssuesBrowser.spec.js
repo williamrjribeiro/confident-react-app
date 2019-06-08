@@ -2,6 +2,7 @@
 import * as React from "react";
 import { mount, shallow, ReactWrapper } from "enzyme";
 import RepositoryIssuesBrowser from "./RepositoryIssuesBrowser";
+import type { Repository, Issue } from "./RepositoryIssuesBrowser";
 
 describe("<RepositoryIssuesBrowser />", () => {
   function findByText(text:string, wrapper:ReactWrapper<any>): ReactWrapper<any> {
@@ -23,7 +24,7 @@ describe("<RepositoryIssuesBrowser />", () => {
 
   describe("when repository data is available", () => {
     it("shows a list of repository names", () => {
-      const repos = [{ name: "Repo 1" }, { name: "Repo 2" }];
+      const repos: Repository[] = [{ name: "Repo 1" }, { name: "Repo 2" }];
       const wrapper = mount(<RepositoryIssuesBrowser repositories={repos} />);
 
       expect(findByText("Repo 1", wrapper)).toExist();
@@ -31,20 +32,24 @@ describe("<RepositoryIssuesBrowser />", () => {
     });
 
     it("shows a summary of all open issues", () => {
-      const repos = [
+      const issues1: Issue[] =  [
+        { title: "Repo 1 - Issue 1", isOpen: true },
+        { title: "Repo 1 - Issue 2", isOpen: false },
+      ];
+
+      const issues2: Issue[] =  [
+        { title: "Repo 2 - Issue 1", isOpen: true },
+        { title: "Repo 2 - Issue 2", isOpen: false },
+      ];
+
+      const repos: Repository[] = [
         {
           name: "Repo 1",
-          issues: [
-            { title: "Repo 1 - Issue 1", isOpen: true },
-            { title: "Repo 1 - Issue 2", isOpen: false },
-          ],
+          issues: issues1,
         },
         {
           name: "Repo 2",
-          issues: [
-            { title: "Repo 2 - Issue 1", isOpen: true },
-            { title: "Repo 2 - Issue 2", isOpen: false },
-          ],
+          issues: issues2,
         },
       ];
 
@@ -52,7 +57,7 @@ describe("<RepositoryIssuesBrowser />", () => {
 
       expect(wrapper).toIncludeText("Total open issues: 2");
 
-      repos[0].issues[0].isOpen = false;
+      issues1[0].isOpen = false;
 
       wrapper = shallow(<RepositoryIssuesBrowser repositories={repos} />);
 
@@ -61,7 +66,7 @@ describe("<RepositoryIssuesBrowser />", () => {
 
     describe("and there are open issues in a repo", () => {
       it("shows the count of opened issues next to the repo name", () => {
-        const repos = [
+        const repos: Repository[] = [
           {
             name: "Repo 1",
             issues: [
@@ -88,7 +93,7 @@ describe("<RepositoryIssuesBrowser />", () => {
     describe('and when a repo is clicked', () => {
       describe('and it is NOT selected', () => {
         it('selects the clicked item', () => {
-          const repos = [{ name: "Repo 1" }, { name: "Repo 2" }];
+          const repos: Repository[] = [{ name: "Repo 1" }, { name: "Repo 2" }];
           const wrapper = mount(<RepositoryIssuesBrowser repositories={repos} />);
           let item1 = findByText("Repo 1", wrapper);
 
@@ -103,7 +108,7 @@ describe("<RepositoryIssuesBrowser />", () => {
         });
 
         it('deselects any other selected item - single selection', () => {
-          const repos = [{ name: "Repo 1" }, { name: "Repo 2" }];
+          const repos: Repository[] = [{ name: "Repo 1" }, { name: "Repo 2" }];
           const wrapper = mount(<RepositoryIssuesBrowser repositories={repos} />);
           let item1 = findByText("Repo 1", wrapper);
           let item2 = findByText("Repo 2", wrapper);
@@ -127,7 +132,7 @@ describe("<RepositoryIssuesBrowser />", () => {
 
       describe('and it IS selected', () => {
         it('deselects the clicked item', () => {
-          const repos = [{ name: "Repo 1" }, { name: "Repo 2" }];
+          const repos: Repository[] = [{ name: "Repo 1" }, { name: "Repo 2" }];
           const wrapper = mount(<RepositoryIssuesBrowser repositories={repos} />);
           let item1 = findByText("Repo 1", wrapper);
           let item2 = findByText("Repo 2", wrapper);
@@ -152,7 +157,7 @@ describe("<RepositoryIssuesBrowser />", () => {
 
     describe('when a repository with open issues is selected', () => {
       it('shows its list of issues', () => {
-        const repos = [
+        const repos: Repository[] = [
           {
             name: "Repo 1",
             issues: [

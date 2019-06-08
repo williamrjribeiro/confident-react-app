@@ -1,0 +1,6 @@
+{
+  "javascript.validate.enable": false,
+  "flow.useBundledFlow": false,
+  "flow.useNPMPackagedFlow": true,
+  "flow.pathToFlow": "${workspaceFolder}/node_modules/flow-bin/flow-osx-v0.95.1/flow",
+}
