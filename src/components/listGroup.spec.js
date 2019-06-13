@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { shallow } from 'enzyme';
-import { ListGroup, ListGroupItem } from './ListGroup';
+import { ListGroup, ListGroupItem } from './listGroup';
 
 describe('<ListGroup />', () => {
   it('renders according to specification', () => {

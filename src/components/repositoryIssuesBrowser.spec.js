@@ -1,8 +1,8 @@
 // @flow
 import * as React from "react";
 import { mount, shallow, ReactWrapper } from "enzyme";
-import RepositoryIssuesBrowser from "./RepositoryIssuesBrowser";
-import type { Repository, Issue } from "./RepositoryIssuesBrowser";
+import RepositoryIssuesBrowser from "./repositoryIssuesBrowser";
+import type { Repository, Issue } from "./repositoryIssuesBrowser";
 
 describe("<RepositoryIssuesBrowser />", () => {
   function findByText(text:string, wrapper:ReactWrapper<any>): ReactWrapper<any> {
