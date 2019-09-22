@@ -7,59 +7,50 @@ From the feature specs we can observe some important information regarding inter
 
 The second point was not explicit from the specs (and it was intentional so that you could comment on it. Did you see it?) but we discovered it after some (imaginary) team discussion (backlog grooming, pre-iteration meeting, etc). Even though the team communicates and writes a lot in preparation for the implementation, many specs questions will rise when the code gets written specially in the early stages of development. As the team knowledge of the product/feature and technical details grows, they can foresee more cases and make sure the specs are not missing anything critical. Effective communication is key!
 
-With that in the clear, it's time to start coding the main funcionality of the feature/app. We're going to follow the [Container component pattern](https://reactpatterns.com/#container-component) for separating the data fetching from the rendering/behavior. Let's start with the latter with the `<RepositoryIssuesBrowser>` component.
+With that in the clear, it's time to start coding the main funcionality of the feature/app. We're going to follow the [Container component pattern](https://reactpatterns.com/#container-component) for separating state management from the rendering/behavior. Let's start with the 
 
-Just to shorten up a bit this post, here's the whole component test without its implementation:
+Just to shorten up a bit this post, here's the whole component's test without its implementation. By reading it, you were supposed to understand what's the puropose/responsability of the component:
 
 ```
 describe("<RepositoryIssuesBrowser />", () => {
+  it("shows a list of repository names", () => {});
 
-  it("renders a loading indicator when loading prop is truthy", () => {});
+  it("shows a summary of all open issues", () => {});
 
-  describe("when repository data is available", () => {
-    it("shows a list of repository names", () => {});
+  describe("and there are open issues in a repo", () => {
+    it("shows the count of opened issues next to the repo name", () => {});
+  });
 
-    it("shows a summary of all open issues", () => {});
+  describe('and when a repo is clicked', () => {
 
-    describe("and there are open issues in a repo", () => {
-      it("shows the count of opened issues next to the repo name", () => {});
+    describe('and it is NOT selected', () => {
+      it('selects the clicked item', () => {});
+
+      it('deselects any other selected item - single selection', () => {});
     });
 
-    describe('and when a repo is clicked', () => {
-
-      describe('and it is NOT selected', () => {
-        it('selects the clicked item', () => {});
-
-        it('deselects any other selected item - single selection', () => {});
-      });
-
-      describe('and it IS selected', () => {
-        it('deselects the clicked item', () => {});
-      });
+    describe('and it IS selected', () => {
+      it('deselects the clicked item', () => {});
     });
+  });
 
-    describe('when a repository with open issues is selected', () => {
-      it('shows its list of issues', () => {});
-    });
+  describe('when a repository with open issues is selected', () => {
+    it('shows its list of issues', () => {});
   });
 });
 ```
 
-But now it's the tricky part: *implement the tests in a way that it's not coupled with the component's implementation.* This is important because we want to be able to refactor our code in ways that better suit the implementation needs *without* having to modify any of its tests. Attention: if the public API changes, that's not a refactor! Code refactoring is the process of restructuring existing computer code without changing its external behavior.
+Now it's the tricky part: *implement the tests in a way that it's not coupled with the component's implementation.* This is important because we want to be able to refactor our code in ways that better suit the implementation needs *without* having to modify any of its tests. Attention: if the public API changes, that's not a refactor! Code refactoring is the process of restructuring existing computer code without changing its external behavior.
+
+You may ask yourself, "What's knowing implementation details?" If the test code looks for an internal `id` or CSS `class`, is it too much? How about looking for dependent component? Maybe a function from a 3rd party library? If the test knows one private implementation detail, does it mean that it can use any other private implementation detail as well? To be honest, I don't have a definitive answer for this dilema. There are as many answers as there are development teams out there. Mine is as follows.
+
+We want to test the functionality of `<RepositoryIssuesBrowser />` component and we know that it must render according to Bootstrap's style so it will use `<ListGroup>` and `<ListGroupItem>` since they already implement/abstract the HTML details. So we must verify/test that the container component uses the render components correctly to represent its internal state and changes based on user's input. Considering this, it's OK for the test to know some implementation details (`<ListGroup>` and `<ListGroupItem >`).
+
+Let's do a quick thought exercise. Imagine that we didn't want to know the rendering details above. Instead, we would look for text labels that we already know in the context of the test. We would be able to implement a few tests but one of the most important we would run into trouble: item selection. Since there's no native HTML attribute for `<li>` tags, we would need to rely on the `active` CSS class used by the render component. I believe that knowing that is worse since it's not a detail of the component under tests. But if it wasn't, then it would be fair.
 
 Here's a test implementation that follows our guidelines. **Red:**
 
 ```
-/**
-* @param {string} text 
-* @param {ReactWrapper<any>} wrapper - an instance of `ReactWrapper` generated by `mount`.
-* @returns Returns the first element from the given wrapper that has text that matches the given text.
-*/
-function findByText(text:string, wrapper:ReactWrapper<any>): ReactWrapper<any> {
-  return wrapper.findWhere(
-    n => n.text() === text
-  ).first();
-}
 
 describe("<RepositoryIssuesBrowser />", () => {
   describe("when repository data is available", () => {
