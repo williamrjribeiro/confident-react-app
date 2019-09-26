@@ -42,28 +42,29 @@ describe("<RepositoryIssuesBrowser />", () => {
 
 Now it's the tricky part: *implement the tests in a way that it's not coupled with the component's implementation.* This is important because we want to be able to refactor our code in ways that better suit the implementation needs *without* having to modify any of its tests. Attention: if the public API changes, that's not a refactor! Code refactoring is the process of restructuring existing computer code without changing its external behavior.
 
-You may ask yourself, "What's knowing implementation details?" If the test code looks for an internal `id` or CSS `class`, is it too much? How about looking for dependent component? Maybe a function from a 3rd party library? If the test knows one private implementation detail, does it mean that it can use any other private implementation detail as well? To be honest, I don't have a definitive answer for this dilema. There are as many answers as there are development teams out there. Mine is as follows.
+You may ask yourself, "What's knowing implementation details?" If the test code looks for an internal `id` or CSS `class`, is it too much? How about looking for dependent component? Maybe a function from a 3rd party library? If the test knows one private implementation detail, does it mean that it can use any other private implementation detail as well? To be honest, I don't have a definitive answer for this dilema. There are as many answers as there are development teams out there.
 
-We want to test the functionality of `<RepositoryIssuesBrowser />` component and we know that it must render according to Bootstrap's style so it will use `<ListGroup>` and `<ListGroupItem>` since they already implement/abstract the HTML details. So we must verify/test that the container component uses the render components correctly to represent its internal state and changes based on user's input. Considering this, it's OK for the test to know some implementation details (`<ListGroup>` and `<ListGroupItem >`).
+This is just my take. We want to test the *functionality* of `<RepositoryIssuesBrowser />` component. We also know that it must render according to Bootstrap's style so it will use `<ListGroup>` and `<ListGroupItem>` since they already implement/abstract the HTML details. So we must verify/test that the container component uses the render components correctly to represent its internal state and changes based on user's input. Considering this, it's OK for the test to know some implementation details (`<ListGroup>` and `<ListGroupItem >`) to figure out if it's being used correctly.
 
-Let's do a quick thought exercise. Imagine that we didn't want to know the rendering details above. Instead, we would look for text labels that we already know in the context of the test. We would be able to implement a few tests but one of the most important we would run into trouble: item selection. Since there's no native HTML attribute for `<li>` tags, we would need to rely on the `active` CSS class used by the render component. I believe that knowing that is worse since it's not a detail of the component under tests. But if it wasn't, then it would be fair.
+Let's do a quick thought exercise. Imagine that we didn't want to know the rendering details above. Instead, we could look for text labels that we already know in the context of the test and it would be able to implement a few tests but we would run into trouble when tackling an important one: item selection. Since there's no native HTML attribute for `<li>` tags that represents selection or active, we would need to rely on the `active` CSS class set by the render component. I believe that relying in that kind of detail is worse since *it's not a detail of the component under tests*. But if it wasn't, then it would be fair.
 
 Here's a test implementation that follows our guidelines. **Red:**
 
 ```
-
 describe("<RepositoryIssuesBrowser />", () => {
   describe("when repository data is available", () => {
     it("shows a list of repository names", () => {
-      const repos = [{ name: "Repo 1" }, { name: "Repo 2" }];
-      const wrapper = mount(<RepositoryIssuesBrowser repositories={repos} />);
+      const repos: Repository[] = [{ name: "Repo 1" }, { name: "Repo 2" }];
+      const wrapper = shallow(<RepositoryIssuesBrowser repositories={repos} />);
 
-      expect(findByText("Repo 1", wrapper)).toExist();
-      expect(findByText("Repo 2", wrapper)).toExist();
+      expect(wrapper.find(ListGroupItem).first().props().children).toEqual("Repo 1");
+      expect(wrapper.find(ListGroupItem).last().props().children).toEqual("Repo 2");
     });
   });
 });
 ```
+
+// TODO: Write about advantages of using shallow and checking for props! Write example of using mount and checking for HTML. Raise the questions which one they preffer.
 
 We have to use `mount` because we don't know yet how the component is implemented so the string we're looking for might be somewhere down the render tree.
 Let's also practice the theory we have learned so far, starting with rule #1: *You are not allowed to write any production code unless it is to make a failing unit test pass.*

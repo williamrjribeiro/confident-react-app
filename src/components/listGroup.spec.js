@@ -3,6 +3,17 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { ListGroup, ListGroupItem } from './listGroup';
 
+// React Hooks && Testing:
+//    https://kevsoft.net/2019/05/28/testing-custom-react-hooks.html
+//    https://dev.to/flexdinesh/react-hooks-test-custom-hooks-with-enzyme-40ib
+
+// styled-components and testing:
+//    https://medium.com/styled-components/effective-testing-for-styled-components-67982eb7d42b
+//    https://www.styled-components.com/docs/api#test-utilities
+//    https://github.com/styled-components/jest-styled-components
+
+// Codesandbox comparing Custom Hooks and Render Prop Pattern implementations and tests.
+
 describe('<ListGroup />', () => {
   it('renders according to specification', () => {
     const wrapper = shallow(

@@ -1,8 +1,9 @@
 // @flow
+import { mount, shallow, ReactWrapper, ShallowWrapper } from "enzyme";
 import * as React from "react";
-import { mount, shallow, ReactWrapper } from "enzyme";
 import RepositoryIssuesBrowser from "./repositoryIssuesBrowser";
 import type { Repository, Issue } from "./repositoryIssuesBrowser";
+import { ListGroupItem } from "./listGroup";
 
 describe("<RepositoryIssuesBrowser />", () => {
   function findByText(text:string, wrapper:ReactWrapper<any>): ReactWrapper<any> {
@@ -11,16 +12,10 @@ describe("<RepositoryIssuesBrowser />", () => {
     }).first();
   }
 
-  function clickItemText(text:string, wrapper:ReactWrapper<any>): ReactWrapper<any> {
-    findByText(text, wrapper).simulate("click");
-    return findByText(text, wrapper);
-  }
-
-  it("renders a loading indicator when loading prop is truthy", () => {
-    const wrapper = shallow(<RepositoryIssuesBrowser loading={true} />);
-
-    expect(wrapper).toHaveText("loading repository data...");
-  });
+  // function clickItemText(text:string, wrapper:ReactWrapper<any>): ReactWrapper<any> {
+  //   findByText(text, wrapper).simulate("click");
+  //   return findByText(text, wrapper);
+  // }
 
   describe("when repository data is available", () => {
     it("shows a list of repository names", () => {
@@ -31,26 +26,34 @@ describe("<RepositoryIssuesBrowser />", () => {
       expect(findByText("Repo 2", wrapper)).toExist();
     });
 
+    it("shows a list of repository names 2", () => {
+      const repos: Repository[] = [{ name: "Repo 1" }, { name: "Repo 2" }];
+      const wrapper = shallow(<RepositoryIssuesBrowser repositories={repos} />);
+
+      expect(wrapper.find(ListGroupItem).first().props().children).toEqual("Repo 1");
+      expect(wrapper.find(ListGroupItem).last().props().children).toEqual("Repo 2");
+    });
+
     it("shows a summary of all open issues", () => {
-      const issues1: Issue[] =  [
+      const issues1: Issue[] = [
         { title: "Repo 1 - Issue 1", isOpen: true },
-        { title: "Repo 1 - Issue 2", isOpen: false },
+        { title: "Repo 1 - Issue 2", isOpen: false }
       ];
 
-      const issues2: Issue[] =  [
+      const issues2: Issue[] = [
         { title: "Repo 2 - Issue 1", isOpen: true },
-        { title: "Repo 2 - Issue 2", isOpen: false },
+        { title: "Repo 2 - Issue 2", isOpen: false }
       ];
 
       const repos: Repository[] = [
         {
           name: "Repo 1",
-          issues: issues1,
+          issues: issues1
         },
         {
           name: "Repo 2",
-          issues: issues2,
-        },
+          issues: issues2
+        }
       ];
 
       let wrapper = shallow(<RepositoryIssuesBrowser repositories={repos} />);
@@ -71,107 +74,127 @@ describe("<RepositoryIssuesBrowser />", () => {
             name: "Repo 1",
             issues: [
               { title: "Repo 1 - Issue 1", isOpen: true },
-              { title: "Repo 1 - Issue 2", isOpen: true },
-            ],
+              { title: "Repo 1 - Issue 2", isOpen: true }
+            ]
           },
           {
             name: "Repo 2",
             issues: [
               { title: "Repo 2 - Issue 1", isOpen: true },
-              { title: "Repo 2 - Issue 2", isOpen: false },
-            ],
-          },
+              { title: "Repo 2 - Issue 2", isOpen: false }
+            ]
+          }
         ];
 
-        const wrapper = mount(<RepositoryIssuesBrowser repositories={repos} />);
+        const wrapper = shallow(
+          <RepositoryIssuesBrowser repositories={repos} />
+        );
 
-        expect(findByText("Repo 1 (2)", wrapper)).toExist();
-        expect(findByText("Repo 2 (1)", wrapper)).toExist();
+        expect(
+          wrapper
+            .find(ListGroupItem)
+            .first()
+            .props().children
+        ).toEqual("Repo 1 (2)");
+        expect(
+          wrapper
+            .find(ListGroupItem)
+            .last()
+            .props().children
+        ).toEqual("Repo 2 (1)");
       });
     });
 
-    describe('and when a repo is clicked', () => {
-      describe('and it is NOT selected', () => {
-        it('selects the clicked item', () => {
-          const repos: Repository[] = [{ name: "Repo 1" }, { name: "Repo 2" }];
-          const wrapper = mount(<RepositoryIssuesBrowser repositories={repos} />);
-          let item1 = findByText("Repo 1", wrapper);
+    describe("and when a repo is clicked", () => {
+      const repos: Repository[] = [{ name: "Repo 1" }, { name: "Repo 2" }];
+      let wrapper: ShallowWrapper<typeof RepositoryIssuesBrowser>;
+      let item1: ReactWrapper<typeof ListGroupItem>;
+      let item2: ReactWrapper<typeof ListGroupItem>;
 
-          expect(item1).toHaveProp('active', false);
-          expect(findByText("Repo 2", wrapper)).toHaveProp('active', false);
+      const getFirstItem = ():ReactWrapper<typeof ListGroupItem> => wrapper.find(ListGroupItem).first();
+      const getLastItem = ():ReactWrapper<typeof ListGroupItem> => wrapper.find(ListGroupItem).last();
 
+      beforeEach(() => {
+        wrapper = shallow(
+          <RepositoryIssuesBrowser repositories={repos} />
+        );
+        item1 = getFirstItem();
+        item2 = getLastItem();
+
+        expect(item1).toHaveProp("active", false);
+        expect(item2).toHaveProp("active", false);
+      });
+
+      describe("and it is NOT selected", () => {
+        it("selects the clicked item", () => {
           item1.simulate("click");
-          item1 = findByText("Repo 1", wrapper);
 
-          expect(item1).toHaveProp('active', true);
-          expect(findByText("Repo 2", wrapper)).toHaveProp('active', false);
+          item1 = getFirstItem();
+          item2 = getLastItem();
+
+          expect(item1).toHaveProp("active", true);
+          expect(item2).toHaveProp("active", false);
         });
 
-        it('deselects any other selected item - single selection', () => {
-          const repos: Repository[] = [{ name: "Repo 1" }, { name: "Repo 2" }];
-          const wrapper = mount(<RepositoryIssuesBrowser repositories={repos} />);
-          let item1 = findByText("Repo 1", wrapper);
-          let item2 = findByText("Repo 2", wrapper);
+        it("deselects any other selected item - single selection", () => {
+          item1.simulate("click");
 
-          expect(item1).toHaveProp('active', false);
-          expect(item2).toHaveProp('active', false);
+          item1 = getFirstItem();
+          item2 = getLastItem();
 
-          item1 = clickItemText("Repo 1", wrapper);
-          item2 = findByText("Repo 2", wrapper);
+          expect(item1).toHaveProp("active", true);
+          expect(item2).toHaveProp("active", false);
 
-          expect(item1).toHaveProp('active', true);
-          expect(item2).toHaveProp('active', false);
+          item2.simulate("click");
 
-          item2 = clickItemText("Repo 2", wrapper);
-          item1 = findByText("Repo 1", wrapper);
+          item1 = getFirstItem();
+          item2 = getLastItem();
 
-          expect(item1).toHaveProp('active', false);
-          expect(item2).toHaveProp('active', true);
+          expect(item1).toHaveProp("active", false);
+          expect(item2).toHaveProp("active", true);
         });
       });
 
-      describe('and it IS selected', () => {
-        it('deselects the clicked item', () => {
-          const repos: Repository[] = [{ name: "Repo 1" }, { name: "Repo 2" }];
-          const wrapper = mount(<RepositoryIssuesBrowser repositories={repos} />);
-          let item1 = findByText("Repo 1", wrapper);
-          let item2 = findByText("Repo 2", wrapper);
+      describe("and it IS selected", () => {
+        it("deselects the clicked item", () => {
+          item1.simulate("click");
           
-          expect(item1).toHaveProp('active', false);
-          expect(item2).toHaveProp('active', false);
+          item1 = getFirstItem();
+          item2 = getLastItem();
+
+          expect(item1).toHaveProp("active", true);
+          expect(item2).toHaveProp("active", false);
 
           item1.simulate("click");
-          item1 = findByText("Repo 1", wrapper);
+          
+          item1 = getFirstItem();
+          item2 = getLastItem();
 
-          expect(item1).toHaveProp('active', true);
-          expect(item2).toHaveProp('active', false);
-
-          item1.simulate("click");
-          item1 = findByText("Repo 1", wrapper);
-
-          expect(item1).toHaveProp('active', false);
-          expect(item2).toHaveProp('active', false);
+          expect(item1).toHaveProp("active", false);
+          expect(item2).toHaveProp("active", false);
         });
       });
     });
 
-    describe('when a repository with open issues is selected', () => {
-      it('shows its list of issues', () => {
+    describe("when a repository with open issues is selected", () => {
+      it("shows its list of OPEN issues", () => {
         const repos: Repository[] = [
           {
             name: "Repo 1",
             issues: [
               { title: "Repo 1 - Issue 1", isOpen: true },
-              { title: "Repo 1 - Issue 2", isOpen: false },
-            ],
+              { title: "Repo 1 - Issue 2", isOpen: false }
+            ]
           },
-          { name: "Repo 2" },
+          { name: "Repo 2" }
         ];
-        const wrapper = mount(<RepositoryIssuesBrowser repositories={repos} />);
-        clickItemText("Repo 1 (1)", wrapper)
+        const wrapper = shallow(
+          <RepositoryIssuesBrowser repositories={repos} />
+        );
+        
+        wrapper.find(ListGroupItem).first().simulate("click");
 
-        expect(findByText("Repo 1 - Issue 1", wrapper)).toExist();
-        expect(findByText("Repo 1 - Issue 2", wrapper)).not.toExist();
+        expect(wrapper.find("SelectedRepoIssues").dive().find(ListGroupItem).props().children).toEqual("Repo 1 - Issue 1");
       });
     });
   });
