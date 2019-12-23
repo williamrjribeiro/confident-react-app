@@ -2,7 +2,7 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
-import { ListGroup, ListGroupItem } from "../components/listGroup";
+import { ListGroup, ListGroupItem, SingleSelectionListGroup } from "../components/listGroup";
 import RepositoryIssuesBrowser from "../components/repositoryIssuesBrowser";
 
 storiesOf("ListGroup", module)
@@ -30,6 +30,20 @@ storiesOf("ListGroup", module)
       </ListGroupItem>
     </ListGroup>
   ));
+
+storiesOf("SingleSelectionListGroup", module)
+  .add("with items", () => (
+    <SingleSelectionListGroup onChange={action("Selection changed")}>
+      <ListGroupItem>item 1</ListGroupItem>
+      <ListGroupItem>item 2</ListGroupItem>
+    </SingleSelectionListGroup>
+  ))
+  .add("with initial selection", () => (
+    <SingleSelectionListGroup onChange={action("Selection changed")}>
+      <ListGroupItem>item 1</ListGroupItem>
+      <ListGroupItem active>item 2</ListGroupItem>
+    </SingleSelectionListGroup>
+  ))
 
 storiesOf("RepositoryIssuesBrowser", module)
   .add("loading repository data", () => (
