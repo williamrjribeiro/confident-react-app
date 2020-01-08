@@ -4,14 +4,10 @@ import * as React from "react";
 type ListGroupItemProps = {
   children: string,
   active?: boolean,
-  onClick?: (SyntheticEvent<HTMLButtonElement>) => void,
+  onClick?: (SyntheticEvent<HTMLButtonElement>) => void
 };
 
-export function ListGroupItem({
-  children,
-  active,
-  onClick,
-}: ListGroupItemProps) {
+export function ListGroupItem({ children, active, onClick }: ListGroupItemProps) {
   let classes = "list-group-item" + (active ? " active" : "");
 
   if (onClick) {
@@ -27,7 +23,7 @@ export function ListGroupItem({
 }
 
 type ListGroupProps = {
-  children: React.ChildrenArray<React.Element<typeof ListGroupItem>>,
+  children: React.ChildrenArray<React.Element<typeof ListGroupItem>>
 };
 
 export function ListGroup(props: ListGroupProps) {
@@ -38,16 +34,11 @@ function getInitialSelect(
   children: React.ChildrenArray<React.Element<typeof ListGroupItem>>
 ): number {
   const childrenArr = React.Children.toArray(children);
-  for (var i = 0, l = childrenArr.length - 1; i <= l; i++) {
-    if (childrenArr[i].props.active) {
-      return i;
-    }
-  }
-  return -1;
+  return childrenArr.findIndex(item => item.props.active);
 }
 
 type SingleSelectionListGroupProps = ListGroupProps & {
-  onChange?: ({ index: number, value: ?string | null }) => void,
+  onChange?: ({ index: number, value: ?string | null }) => void
 };
 
 export function SingleSelectionListGroup(props: SingleSelectionListGroupProps) {
@@ -62,7 +53,7 @@ export function SingleSelectionListGroup(props: SingleSelectionListGroupProps) {
     props.onChange &&
       props.onChange({
         index,
-        value,
+        value
       });
   };
 
@@ -70,10 +61,8 @@ export function SingleSelectionListGroup(props: SingleSelectionListGroupProps) {
     React.cloneElement(listItem, {
       key: index,
       onClick: getClickHandler(index, listItem.props.children),
-      active: index === selectedIndex,
+      active: index === selectedIndex
     });
 
-  return (
-    <ListGroup>{React.Children.map(props.children, cloneItems)}</ListGroup>
-  );
+  return <ListGroup>{React.Children.map(props.children, cloneItems)}</ListGroup>;
 }

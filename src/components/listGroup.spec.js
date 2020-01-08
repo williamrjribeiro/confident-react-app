@@ -1,11 +1,7 @@
 // @flow
 import React from "react";
 import { shallow } from "enzyme";
-import {
-  ListGroup,
-  ListGroupItem,
-  SingleSelectionListGroup,
-} from "./listGroup";
+import { ListGroup, ListGroupItem, SingleSelectionListGroup } from "./listGroup";
 
 describe("<ListGroup />", () => {
   it("renders according to specification", () => {
@@ -30,16 +26,12 @@ describe("<ListGroupItem />", () => {
 
   it("renders active when active prop is truthy", () => {
     const wrapper = shallow(<ListGroupItem active>item 1</ListGroupItem>);
-    expect(wrapper).toContainExactlyOneMatchingElement(
-      "li.list-group-item.active"
-    );
+    expect(wrapper).toContainExactlyOneMatchingElement("li.list-group-item.active");
   });
 
   describe("when onClick prop is defined", () => {
     it("renders as an action button", () => {
-      const wrapper = shallow(
-        <ListGroupItem onClick={() => {}}>item 1</ListGroupItem>
-      );
+      const wrapper = shallow(<ListGroupItem onClick={() => {}}>item 1</ListGroupItem>);
       expect(wrapper).toContainExactlyOneMatchingElement(
         'button[type="button"].list-group-item.list-group-item-action'
       );
@@ -58,9 +50,7 @@ describe("<ListGroupItem />", () => {
 
     it("calls the given callback when clicked", () => {
       const onClickSpy = jest.fn();
-      const wrapper = shallow(
-        <ListGroupItem onClick={onClickSpy}>item 1</ListGroupItem>
-      );
+      const wrapper = shallow(<ListGroupItem onClick={onClickSpy}>item 1</ListGroupItem>);
 
       wrapper.simulate("click");
 
@@ -80,7 +70,7 @@ describe("<SingleSelectionListGroup />", () => {
 
     const listGroup = wrapper.find(ListGroup);
     expect(listGroup).toExist();
-    expect(listGroup.find(ListGroupItem)).toHaveLength(2)
+    expect(listGroup.find(ListGroupItem)).toHaveLength(2);
   });
 
   describe("and when an item is clicked", () => {
@@ -93,11 +83,12 @@ describe("<SingleSelectionListGroup />", () => {
           </SingleSelectionListGroup>
         );
 
-        wrapper.find(ListGroupItem).first().simulate("click");
+        wrapper
+          .find(ListGroupItem)
+          .first()
+          .simulate("click");
 
-        expect(
-          wrapper.find(ListGroupItem).first()
-        ).toHaveProp("active", true);
+        expect(wrapper.find(ListGroupItem).first()).toHaveProp("active", true);
       });
 
       it("deselects any other selected item - single selection", () => {
@@ -108,19 +99,16 @@ describe("<SingleSelectionListGroup />", () => {
           </SingleSelectionListGroup>
         );
 
-        expect(
-          wrapper.find(ListGroupItem).first()
-        ).toHaveProp("active", true);
+        expect(wrapper.find(ListGroupItem).first()).toHaveProp("active", true);
 
-        wrapper.find(ListGroupItem).last().simulate("click");
+        wrapper
+          .find(ListGroupItem)
+          .last()
+          .simulate("click");
 
-        expect(
-          wrapper.find(ListGroupItem).first()
-        ).toHaveProp("active", false);
+        expect(wrapper.find(ListGroupItem).first()).toHaveProp("active", false);
 
-        expect(
-          wrapper.find(ListGroupItem).last()
-        ).toHaveProp("active", true);
+        expect(wrapper.find(ListGroupItem).last()).toHaveProp("active", true);
       });
     });
 
@@ -133,19 +121,16 @@ describe("<SingleSelectionListGroup />", () => {
           </SingleSelectionListGroup>
         );
 
-        expect(
-          wrapper.find(ListGroupItem).last()
-        ).toHaveProp("active", true);
+        expect(wrapper.find(ListGroupItem).last()).toHaveProp("active", true);
 
-        wrapper.find(ListGroupItem).last().simulate("click");
+        wrapper
+          .find(ListGroupItem)
+          .last()
+          .simulate("click");
 
-        expect(
-          wrapper.find(ListGroupItem).last()
-        ).toHaveProp("active", false);
+        expect(wrapper.find(ListGroupItem).last()).toHaveProp("active", false);
 
-        expect(
-          wrapper.find(ListGroupItem).first()
-        ).toHaveProp("active", false);
+        expect(wrapper.find(ListGroupItem).first()).toHaveProp("active", false);
       });
     });
 
@@ -158,18 +143,24 @@ describe("<SingleSelectionListGroup />", () => {
         </SingleSelectionListGroup>
       );
 
-      wrapper.find(ListGroupItem).first().simulate("click");
+      wrapper
+        .find(ListGroupItem)
+        .first()
+        .simulate("click");
 
       expect(changeSpy).toHaveBeenCalledWith({
         index: 0,
-        value: "Item 1",
+        value: "Item 1"
       });
 
-      wrapper.find(ListGroupItem).first().simulate("click");
+      wrapper
+        .find(ListGroupItem)
+        .first()
+        .simulate("click");
 
       expect(changeSpy).toHaveBeenCalledWith({
         index: -1,
-        value: null,
+        value: null
       });
     });
   });
