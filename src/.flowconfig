@@ -1,10 +1,13 @@
 [ignore]
-/node_modules
+./setupTests.js
 
 [include]
-/src/**/*.js
 
 [libs]
+../flow-typed
+
+[declarations]
+../node_modules
 
 [lints]
 
