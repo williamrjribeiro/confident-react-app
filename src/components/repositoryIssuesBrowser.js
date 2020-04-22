@@ -21,6 +21,8 @@ type RepositoryIssuesBrowserProps = {
   repositories?: Repository[],
 };
 
+const openIssueFilter = (issue: Issue) => issue.isOpen
+
 export default class RepositoryIssuesBrowser extends React.Component<RepositoryIssuesBrowserProps, RepositoryIssuesBrowserState> {
   state = {
     selectedIndex: -1
@@ -50,8 +52,7 @@ export default class RepositoryIssuesBrowser extends React.Component<RepositoryI
         let repoIssueCount = 0;
 
         if (repo.issues) {
-          repoIssueCount = repo.issues.filter((issue: Issue) => issue.isOpen)
-            .length;
+          repoIssueCount = repo.issues.filter(openIssueFilter).length;
           totalOpenIssues += repoIssueCount;
         }
 
@@ -72,11 +73,11 @@ export default class RepositoryIssuesBrowser extends React.Component<RepositoryI
       const selectedRepoIssues: ?Issue[] = (selectedIndex === -1 ? null : repositories[selectedIndex].issues);
 
       return (
-        <React.Fragment>
+        <>
           Total open issues: {totalOpenIssues}
           <ListGroup>{items}</ListGroup>
           <SelectedRepoIssues issues={selectedRepoIssues || []} />
-        </React.Fragment>
+        </>
       );
     }
 

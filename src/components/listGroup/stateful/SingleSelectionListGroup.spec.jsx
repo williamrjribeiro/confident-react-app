@@ -1,63 +1,10 @@
 // @flow
 import React from "react";
 import { shallow } from "enzyme";
-import { ListGroup, ListGroupItem, SingleSelectionListGroup } from "./listGroup";
-
-describe("<ListGroup />", () => {
-  it("renders according to specification", () => {
-    const wrapper = shallow(
-      <ListGroup>
-        <ListGroupItem>item 1</ListGroupItem>
-        <ListGroupItem>item 2</ListGroupItem>
-      </ListGroup>
-    );
-
-    expect(wrapper).toContainExactlyOneMatchingElement("ul.list-group");
-    expect(wrapper.find(ListGroupItem).length).toEqual(2);
-  });
-});
-
-describe("<ListGroupItem />", () => {
-  it("renders according to specification", () => {
-    const wrapper = shallow(<ListGroupItem>item 1</ListGroupItem>);
-    expect(wrapper).toContainExactlyOneMatchingElement("li.list-group-item");
-    expect(wrapper).toHaveText("item 1");
-  });
-
-  it("renders active when active prop is truthy", () => {
-    const wrapper = shallow(<ListGroupItem active>item 1</ListGroupItem>);
-    expect(wrapper).toContainExactlyOneMatchingElement("li.list-group-item.active");
-  });
-
-  describe("when onClick prop is defined", () => {
-    it("renders as an action button", () => {
-      const wrapper = shallow(<ListGroupItem onClick={() => {}}>item 1</ListGroupItem>);
-      expect(wrapper).toContainExactlyOneMatchingElement(
-        'button[type="button"].list-group-item.list-group-item-action'
-      );
-    });
-
-    it("renders as an active action button when active prop is truthy", () => {
-      const wrapper = shallow(
-        <ListGroupItem active onClick={() => {}}>
-          item 1
-        </ListGroupItem>
-      );
-      expect(wrapper).toContainExactlyOneMatchingElement(
-        'button[type="button"].list-group-item.list-group-item-action.active'
-      );
-    });
-
-    it("calls the given callback when clicked", () => {
-      const onClickSpy = jest.fn();
-      const wrapper = shallow(<ListGroupItem onClick={onClickSpy}>item 1</ListGroupItem>);
-
-      wrapper.simulate("click");
-
-      expect(onClickSpy).toHaveBeenCalled();
-    });
-  });
-});
+import SingleSelectionListGroup from "./SingleSelectionListGroup";
+import ListGroup from "../ListGroup";
+import type { ListGroupProps } from "../ListGroup";
+import ListGroupItem from "../ListGroupItem";
 
 describe("<SingleSelectionListGroup />", () => {
   it("renders according to specification", () => {
