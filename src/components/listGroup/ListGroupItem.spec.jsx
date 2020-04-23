@@ -21,6 +21,7 @@ describe("<ListGroupItem />", () => {
         expect(wrapper).toContainExactlyOneMatchingElement(
           'button[type="button"].list-group-item.list-group-item-action'
         );
+        expect(wrapper).toHaveText("item 1");
       });
   
       it("renders as an active action button when active prop is truthy", () => {
@@ -32,6 +33,7 @@ describe("<ListGroupItem />", () => {
         expect(wrapper).toContainExactlyOneMatchingElement(
           'button[type="button"].list-group-item.list-group-item-action.active'
         );
+        expect(wrapper).toHaveText("item 1");
       });
   
       it("calls the given callback when clicked", () => {
