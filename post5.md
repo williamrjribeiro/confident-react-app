@@ -20,7 +20,7 @@ Just to shorten up a bit this post, here's the whole component's test without it
 describe("<SingleSelectionListGroup />", () => {
   it('renders according to specification', () => {});
 
-  describe('and when an item is clicked', () => {
+  describe('when an item is clicked', () => {
 
     describe('and it is NOT selected', () => {
       it('selects the clicked item', () => {});
